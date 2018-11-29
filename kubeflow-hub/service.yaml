@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hub-proxy 
+  namespace: kubeflow 
+spec:
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000 

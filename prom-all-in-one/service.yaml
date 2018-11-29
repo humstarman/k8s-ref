@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: prom-all-in-one
+spec:
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: prometheus 
+    - port: 3000 
+      targetPort: 3000
+      name: grafana 
+  selector:
+    component: prom-all-in-one

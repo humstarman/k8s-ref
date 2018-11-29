@@ -1,0 +1,10 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: hub-proxy 
+  namespace: kubeflow 
+subsets:
+  - addresses:
+      - ip: 172.30.29.12 
+    ports:
+      - port: 8000 

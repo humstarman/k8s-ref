@@ -1,0 +1,9 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: file-server 
+spec:
+  ports:
+    - protocol: TCP 
+      port: 80
+      targetPort: 2121 

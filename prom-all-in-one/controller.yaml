@@ -1,0 +1,101 @@
+kind: Deployment 
+apiVersion: extensions/v1beta1
+metadata:
+  name: prom-all-in-one
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: prom-all-in-one
+    spec:
+      containers:
+        - name: app-0 
+          image: 172.31.78.217:5000/prom-app
+          command:
+            - /random
+            - -listen-address=:8080
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: app-1 
+          image: 172.31.78.217:5000/prom-app
+          command:
+            - /random
+            - -listen-address=:8081
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: app-2 
+          image: 172.31.78.217:5000/prom-app
+          command:
+            - /random
+            - -listen-address=:8082
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: app-3 
+          image: 172.31.78.217:5000/prom-app-custom
+          command:
+            - /custom
+            - -p=:8085
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: prom-cli
+          image: 172.31.78.217:5000/prom-client
+          command:
+            - /bin/sh
+            - -c
+            - "while true;do sleep 60;done"
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: grafana
+          image: 172.31.78.217:5000/grafana
+          command:
+            - bin/grafana-server
+            - web
+          ports:
+            - containerPort: 3000 
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: cached 
+              mountPath: /cached
+        - name: prom-server
+          image: 172.31.78.217:5000/prom-server
+          command:
+            - /opt/prometheus/prometheus
+            - --config.file=/etc/prometheus/prometheus.yml
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: prom-config 
+              mountPath: /etc/prometheus/prometheus.yml 
+              subPath: prometheus.yml
+              readOnly: true
+            - name: cached 
+              mountPath: /cached
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: prom-config 
+          configMap:
+            name: prom-config
+        - name: cached 
+          emptyDir: {}

@@ -1,0 +1,30 @@
+kind: Deployment 
+apiVersion: extensions/v1beta1
+metadata:
+  name: my-prom-client
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: my-prom-client
+    spec:
+      containers:
+        - name: my-prom-client
+          image: 172.31.78.217:5000/git 
+          command:
+            - /bin/bash
+            - -c 
+            - "while true; do sleep 60; done"
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+            - containerPort: 8082
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime

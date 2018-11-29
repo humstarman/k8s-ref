@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: file-server 
+subsets:
+  - addresses:
+      - ip: 172.31.78.216 
+    ports:
+      - port: 2121

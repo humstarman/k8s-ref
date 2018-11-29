@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-prometheus
+spec:
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: http
+  selector:
+    component: my-prometheus
